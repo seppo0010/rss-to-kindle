@@ -35,7 +35,22 @@ func GenerateArticle(article Article) string {
 			splitedContent := strings.Split(article.Content, "\n")
 
 			for key, paragraph := range splitedContent {
-				splitedContent[key] = "<p>" + paragraph + "</p><br>"
+				paragraph = strings.Replace(paragraph, "<br>", "", -1)
+				paragraph = strings.TrimSpace(paragraph)
+
+				if len(paragraph) > 0 {
+					splitedContent[key] = "<p>" + paragraph + "</p><br>"
+				}
+			}
+
+			for key, paragraph := range splitedContent {
+				if paragraph == "" {
+					if key+1 >= len(splitedContent) {
+						splitedContent = splitedContent[:key]
+					} else {
+						splitedContent = append(splitedContent[:key], splitedContent[key+1:]...)
+					}
+				}
 			}
 
 			article.Content = strings.Join(splitedContent, "\n")
