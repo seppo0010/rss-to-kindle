@@ -9,7 +9,7 @@ import (
 
 //GenerateMobi ...
 func GenerateMobi(dir string) string {
-	cmd := exec.Command("kindlegen", filepath.Join(dir, "main.opf"), "-c1")
+	cmd := exec.Command("kindlegen", filepath.Join(dir, "main.opf"), "-c2", "-gif")
 
 	cmd.Run()
 
