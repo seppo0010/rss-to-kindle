@@ -39,7 +39,9 @@ func GenerateManifest(feed Feed) (string, []string) {
 			arr = append(arr, str)
 		}
 	}
-	str := fmt.Sprintf(fileTypeTmpl, "contents.html", "application/xhtml+xml", "contents")
-	arr = append(arr, str)
+	arr = append(arr,
+		fmt.Sprintf(fileTypeTmpl, "contents.html", "application/xhtml+xml", "contents"),
+		fmt.Sprintf(fileTypeTmpl, "nav-contents.ncx", "application/x-dtbncx+xml", "nav-contents"),
+	)
 	return strings.Join(arr, "\n"), images
 }

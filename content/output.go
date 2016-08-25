@@ -131,6 +131,15 @@ func makeOpfFile(dir string, feed Feed) []string {
 	return images
 }
 
+func makeNavContentsFile(dir string, feed Feed) {
+	path := filepath.Join(dir, "nav-contents.ncx")
+
+	content := []byte(GenerateNavMain(feed))
+	if err := ioutil.WriteFile(path, content, 0666); err != nil {
+		log.Fatal(err)
+	}
+}
+
 //MakeMain ...
 func MakeMain(feed Feed) string {
 	dir := createTempDir()
@@ -138,6 +147,7 @@ func MakeMain(feed Feed) string {
 	makeContentsFile(dir, feed)
 	makeOpfFile(dir, feed)
 	makeArticlesFile(dir, feed)
+	makeNavContentsFile(dir, feed)
 
 	return dir
 }
