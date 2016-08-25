@@ -2,7 +2,6 @@ package content
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/mmcdole/gofeed"
 )
@@ -48,7 +47,7 @@ func GetFeed(path string) Feed {
 		article.ID = key
 		article.Title = item.Title
 		article.Description = item.Description
-		article.Content = strings.Replace(item.Description, "\n", "<br>", -1)
+		article.Content = item.Description
 		article.Author = item.Author.Name
 		result.Sections[0].Articles = append(result.Sections[0].Articles, article)
 	}

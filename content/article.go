@@ -2,19 +2,45 @@ package content
 
 import (
 	"fmt"
+	"path/filepath"
+	"regexp"
+	"strings"
 )
-
-var articleTmpl = `<html>
-	<head>
-		<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
-		<title>%s</title>
-	</head>
-	<body>
-		%s
-	</body>
-</html>`
 
 //GenerateArticle ...
 func GenerateArticle(article Article) string {
-	return fmt.Sprintf(articleTmpl, article.Title, article.Content)
+	var articleTmpl = `<html>
+		<head>
+			<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+			<title>%s</title>
+		</head>
+		<body>
+			<h1>%s</h1>
+			%s
+		</body>
+	</html>`
+
+	var imageTagTmpl = `<img src="%s.jpg" middle="true"><br><br>`
+
+	r, _ := regexp.Compile(`<img[\s\S]+src="(?P<src>[\s\S]*?)"[\s\S]*\/>`)
+	result := r.FindAllStringSubmatch(article.Content, -1)
+
+	if len(result) >= 1 {
+		for _, item := range result {
+			_, filename := filepath.Split(item[1])
+			filename = strings.TrimSuffix(filename, filepath.Ext(filename))
+
+			imageTag := fmt.Sprintf(imageTagTmpl, filename)
+			article.Content = strings.Replace(article.Content, item[0], imageTag, -1)
+			splitedContent := strings.Split(article.Content, "\n")
+
+			for key, paragraph := range splitedContent {
+				splitedContent[key] = "<p>" + paragraph + "</p><br>"
+			}
+
+			article.Content = strings.Join(splitedContent, "\n")
+		}
+	}
+
+	return fmt.Sprintf(articleTmpl, article.Title, article.Title, article.Content)
 }

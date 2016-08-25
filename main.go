@@ -35,7 +35,9 @@ func main() {
 	for _, link := range links {
 		feed := content.GetFeed(link)
 		dir := content.MakeMain(feed)
+
 		mobiPath := kindle.GenerateMobi(dir)
 		kindle.Send(server, port, fromEmail, password, toEmail, mobiPath)
+		kindle.Cleanup(dir)
 	}
 }
