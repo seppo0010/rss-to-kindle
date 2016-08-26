@@ -3,7 +3,9 @@ rss-to-kindle
 
 This is a utility for converting rss into .mobi periodical, and sending them to your kindle email.
 
-Currently the script is kind of rough, but it will get the job done.
+Currently the script is kind of rough, but it will get the job done (even images!), for instance:
+* no support for multiple section yet (everything is under the "Main" section)
+* minor formatting issue (padding, margin, etc ...)
 
 ## Requirement
 
