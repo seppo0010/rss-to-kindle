@@ -9,14 +9,14 @@ import (
 func GenerateContents(feed Feed) string {
 	var mainTmpl = `<html>
 		<head>
-      <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
-      <title>Table of Contents</title>
-    </head>
-    <body>
-      <h1>Contents</h1>
-      %s
-    </body>
-  </html>`
+			<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+			<title>Table of Contents</title>
+		</head>
+		<body>
+			<h1>Contents</h1>
+			%s
+		</body>
+	</html>`
 	var sectionArr []string
 	for _, section := range feed.Sections {
 		sectionArr = append(sectionArr, generateSection(section))
@@ -27,9 +27,9 @@ func GenerateContents(feed Feed) string {
 
 func generateSection(section Section) string {
 	var sectionTmpl = `<h4>%s</h4>
-  <ul>
-    %s
-  </ul>`
+	<ul>
+		%s
+	</ul>`
 	var articleArr []string
 	for _, article := range section.Articles {
 		articleArr = append(articleArr, generateArticle(article))
@@ -40,8 +40,8 @@ func generateSection(section Section) string {
 
 func generateArticle(article Article) string {
 	var articleTmpl = `<li>
-    <a href="%s">%s</a>
-  </li>`
+		<a href="%s">%s</a>
+	</li>`
 	path := fmt.Sprintf("%d.html", article.ID)
 	return fmt.Sprintf(articleTmpl, path, article.Title)
 }
