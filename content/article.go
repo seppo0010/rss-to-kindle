@@ -15,12 +15,14 @@ func GenerateArticle(article Article) string {
 			<title>%s</title>
 		</head>
 		<body>
-			<h1>%s</h1>
+			<div class="header">
+				<h1>%s</h1>
+			</div>
 			%s
 		</body>
 	</html>`
 
-	var imageTagTmpl = `<img src="%s.jpg" middle="true"><br><br>`
+	var imageTagTmpl = `<p><img src="%s.jpg" middle="true"></p>`
 
 	r, _ := regexp.Compile(`<img[\s\S]+src="(?P<src>[\s\S]*?)"[\s\S]*\/>`)
 	result := r.FindAllStringSubmatch(article.Content, -1)
