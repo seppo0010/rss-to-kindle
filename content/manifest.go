@@ -9,14 +9,16 @@ import (
 var fileTypeTmpl = `<item href="%s" media-type="%s" id="%s"/>`
 
 func parseArticle(article Article) []string {
-	r, _ := regexp.Compile(`<img[\s\S]+src="(?P<src>[\s\S]*?)"[\s\S]*\/>`)
-	result := r.FindAllStringSubmatch(article.Content, -1)
+	regexTag, _ := regexp.Compile(`<img\s[^>]*?src\s*=\s*['\"]([^'\"]*?)['\"][^>]*?>`)
+	regexQuery, _ := regexp.Compile(`\?[\s\S]*?$`)
+
+	result := regexTag.FindAllStringSubmatch(article.Content, -1)
 
 	var images []string
-
 	if len(result) >= 1 {
 		for _, item := range result {
 			links := item[1]
+			links = regexQuery.ReplaceAllString(links, "")
 			images = append(images, links)
 		}
 	}

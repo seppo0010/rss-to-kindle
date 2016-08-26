@@ -24,12 +24,15 @@ func GenerateArticle(article Article) string {
 
 	var imageTagTmpl = `<p><img src="%s.jpg" middle="true" style="margin-bottom: 20px"></p>`
 
-	r, _ := regexp.Compile(`<img\s[^>]*?src\s*=\s*['\"]([^'\"]*?)['\"][^>]*?>`)
-	result := r.FindAllStringSubmatch(article.Content, -1)
+	regexTag, _ := regexp.Compile(`<img\s[^>]*?src\s*=\s*['\"]([^'\"]*?)['\"][^>]*?>`)
+	regexQuery, _ := regexp.Compile(`\?[\s\S]*?$`)
+
+	result := regexTag.FindAllStringSubmatch(article.Content, -1)
 
 	if len(result) >= 1 {
 		for _, item := range result {
-			_, filename := filepath.Split(item[1])
+			links := regexQuery.ReplaceAllString(item[1], "")
+			_, filename := filepath.Split(links)
 			filename = strings.TrimSuffix(filename, filepath.Ext(filename))
 
 			imageTag := fmt.Sprintf(imageTagTmpl, filename)
