@@ -32,6 +32,16 @@ type Article struct {
 	Author      string
 }
 
+func getContent(item gofeed.Item) string {
+	if item.Content != "" {
+		return item.Content
+	}
+	if len(item.Extensions["content"]["encoded"]) > 0 && len(item.Extensions["content"]["encoded"][0].Value) > 0 {
+		return item.Extensions["content"]["encoded"][0].Value
+	}
+	return item.Description
+}
+
 //GetFeed ...
 func GetFeed(path string) Feed {
 	fp := gofeed.NewParser()
@@ -50,12 +60,18 @@ func GetFeed(path string) Feed {
 	result.Sections = append(result.Sections, Section{"Main", nil})
 
 	for key, item := range feed.Items {
+
 		article := Article{}
 		article.ID = key
 		article.Title = item.Title
 		article.Description = item.Description
-		article.Content = item.Description
-		article.Author = item.Author.Name
+
+		article.Content = getContent(*item)
+
+		if item.Author != nil {
+			article.Author = item.Author.Name
+		}
+
 		result.Sections[0].Articles = append(result.Sections[0].Articles, article)
 	}
 	return result

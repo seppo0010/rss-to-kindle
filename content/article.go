@@ -24,7 +24,7 @@ func GenerateArticle(article Article) string {
 
 	var imageTagTmpl = `<p><img src="%s.jpg" middle="true" style="margin-bottom: 20px"></p>`
 
-	r, _ := regexp.Compile(`<img[\s\S]+src="(?P<src>[\s\S]*?)"[\s\S]*\/>`)
+	r, _ := regexp.Compile(`<img\s[^>]*?src\s*=\s*['\"]([^'\"]*?)['\"][^>]*?>`)
 	result := r.FindAllStringSubmatch(article.Content, -1)
 
 	if len(result) >= 1 {
