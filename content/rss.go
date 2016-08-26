@@ -2,15 +2,19 @@ package content
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/mmcdole/gofeed"
 )
 
 //Feed ...
 type Feed struct {
-	ID       string
-	Title    string
-	Sections []Section
+	ID          string
+	Title       string
+	Language    string
+	Description string
+	BuildDate   time.Time
+	Sections    []Section
 }
 
 //Section ...
@@ -40,6 +44,9 @@ func GetFeed(path string) Feed {
 	result := Feed{}
 
 	result.Title = feed.Title
+	result.Language = feed.Language
+	result.Description = feed.Description
+	result.BuildDate = *feed.UpdatedParsed
 	result.Sections = append(result.Sections, Section{"Main", nil})
 
 	for key, item := range feed.Items {

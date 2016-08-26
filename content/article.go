@@ -22,7 +22,7 @@ func GenerateArticle(article Article) string {
 		</body>
 	</html>`
 
-	var imageTagTmpl = `<p><img src="%s.jpg" middle="true"></p>`
+	var imageTagTmpl = `<p><img src="%s.jpg" middle="true" style="margin-bottom: 20px"></p>`
 
 	r, _ := regexp.Compile(`<img[\s\S]+src="(?P<src>[\s\S]*?)"[\s\S]*\/>`)
 	result := r.FindAllStringSubmatch(article.Content, -1)
