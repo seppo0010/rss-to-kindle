@@ -21,8 +21,20 @@ type configuration struct {
 	links     []string
 }
 
+func printHeader(message string) {
+	c := color.New(color.FgCyan)
+
+	c.Println("---")
+	c.Println(message)
+	c.Println("---")
+}
+
+func printStatus(message string) {
+	c := color.New(color.FgGreen)
+	c.Println(message)
+}
+
 func printConfiguration(conf configuration) {
-	color.New(color.FgCyan).Add(color.Underline).Println("Configuration")
 	fmt.Println("SERVER:\t" + conf.server)
 	fmt.Println("PORT:\t" + conf.port)
 	fmt.Println("FROM:\t" + conf.fromEmail)
@@ -50,14 +62,21 @@ func main() {
 		strings.Split(os.Getenv("LINKS"), ","),
 	}
 
+	printHeader("Configuration")
 	printConfiguration(conf)
 
 	for _, link := range conf.links {
 		feed := content.GetFeed(link)
+		printHeader("Feed: " + feed.Title)
+
+		printStatus("Creating files...")
 		dir := content.MakeMain(feed)
 
+		printStatus("Generating .mobi file...")
 		mobiPath := kindle.GenerateMobi(dir)
+		fmt.Println(mobiPath)
 
+		printStatus("Sending files to your kindle email...")
 		kindle.Send(
 			conf.server,
 			conf.port,
@@ -67,6 +86,9 @@ func main() {
 			mobiPath,
 		)
 
+		printStatus("Cleaning up...")
 		kindle.Cleanup(dir)
+
+		printStatus("Done.")
 	}
 }
