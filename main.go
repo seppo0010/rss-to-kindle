@@ -74,7 +74,6 @@ func main() {
 
 		printStatus("Generating .mobi file...")
 		mobiPath := kindle.GenerateMobi(dir)
-		fmt.Println(mobiPath)
 
 		printStatus("Sending files to your kindle email...")
 		kindle.Send(
