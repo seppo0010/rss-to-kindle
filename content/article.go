@@ -2,65 +2,40 @@ package content
 
 import (
 	"fmt"
-	"path/filepath"
 	"regexp"
+	"rss-to-kindle/utils"
 	"strings"
 )
 
 //GenerateArticle ...
 func GenerateArticle(article Article) string {
-	var articleTmpl = `<html>
-		<head>
-			<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
-			<title>%s</title>
-		</head>
-		<body>
-			<div class="header">
-				<h1>%s</h1>
-			</div>
-			%s
-		</body>
-	</html>`
+	result := regexp.MustCompile(ImageTagRegex).FindAllStringSubmatch(article.Content, -1)
 
-	var imageTagTmpl = `<p><img src="%s.jpg" middle="true" style="margin-bottom: 20px"></p>`
+	for _, item := range result {
+		imageTag := fmt.Sprintf(ImageTagTmpl, utils.GetFilename(item[1], false))
 
-	regexTag, _ := regexp.Compile(`<img\s[^>]*?src\s*=\s*['\"]([^'\"]*?)['\"][^>]*?>`)
-	regexQuery, _ := regexp.Compile(`\?[\s\S]*?$`)
+		article.Content = strings.Replace(article.Content, item[0], imageTag, -1)
+		splitedContent := strings.Split(article.Content, "\n")
 
-	result := regexTag.FindAllStringSubmatch(article.Content, -1)
-
-	if len(result) >= 1 {
-		for _, item := range result {
-			links := regexQuery.ReplaceAllString(item[1], "")
-			_, filename := filepath.Split(links)
-			filename = strings.TrimSuffix(filename, filepath.Ext(filename))
-
-			imageTag := fmt.Sprintf(imageTagTmpl, filename)
-			article.Content = strings.Replace(article.Content, item[0], imageTag, -1)
-			splitedContent := strings.Split(article.Content, "\n")
-
-			for key, paragraph := range splitedContent {
-				paragraph = strings.Replace(paragraph, "<br>", "", -1)
-				paragraph = strings.TrimSpace(paragraph)
-
-				if len(paragraph) > 0 {
-					splitedContent[key] = "<p>" + paragraph + "</p><br>"
-				}
+		for key, paragraph := range splitedContent {
+			paragraph = strings.TrimSpace(strings.Replace(paragraph, "<br>", "", -1))
+			if len(paragraph) > 0 {
+				splitedContent[key] = "<p>" + paragraph + "</p>"
 			}
-
-			for key, paragraph := range splitedContent {
-				if paragraph == "" {
-					if key+1 >= len(splitedContent) {
-						splitedContent = splitedContent[:key]
-					} else {
-						splitedContent = append(splitedContent[:key], splitedContent[key+1:]...)
-					}
-				}
-			}
-
-			article.Content = strings.Join(splitedContent, "\n")
 		}
+
+		for key, paragraph := range splitedContent {
+			if len(paragraph) < 0 {
+				if key+1 >= len(splitedContent) {
+					splitedContent = splitedContent[:key]
+				} else {
+					splitedContent = append(splitedContent[:key], splitedContent[key+1:]...)
+				}
+			}
+		}
+
+		article.Content = strings.Join(splitedContent, "\n")
 	}
 
-	return fmt.Sprintf(articleTmpl, article.Title, article.Title, article.Content)
+	return fmt.Sprintf(ArticleTmpl, article.Title, article.Title, article.Content)
 }

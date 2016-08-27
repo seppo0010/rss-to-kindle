@@ -5,18 +5,16 @@ import (
 	"strings"
 )
 
-var spineTmpl = `<itemref idref="%s"/>`
-
 //GenerateSpine ...
 func GenerateSpine(feed Feed) string {
 	var arr []string
-	arr = append(arr, fmt.Sprintf(spineTmpl, "contents"))
+	arr = append(arr, fmt.Sprintf(SpineTmpl, "contents"))
+
 	for _, section := range feed.Sections {
 		for _, article := range section.Articles {
-			idStr := fmt.Sprintf("%d", article.ID)
-			str := fmt.Sprintf(spineTmpl, idStr)
-			arr = append(arr, str)
+			arr = append(arr, fmt.Sprintf(SpineTmpl, fmt.Sprintf("%d", article.ID)))
 		}
 	}
+
 	return strings.Join(arr, "\n")
 }

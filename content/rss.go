@@ -1,7 +1,7 @@
 package content
 
 import (
-	"fmt"
+	"rss-to-kindle/utils"
 	"time"
 
 	"github.com/mmcdole/gofeed"
@@ -33,7 +33,7 @@ type Article struct {
 }
 
 func getContent(item gofeed.Item) string {
-	if item.Content != "" {
+	if len(item.Content) > 0 {
 		return item.Content
 	}
 	if len(item.Extensions["content"]["encoded"]) > 0 && len(item.Extensions["content"]["encoded"][0].Value) > 0 {
@@ -44,35 +44,29 @@ func getContent(item gofeed.Item) string {
 
 //GetFeed ...
 func GetFeed(path string) Feed {
-	fp := gofeed.NewParser()
-	feed, err := fp.ParseURL(path)
+	feed, err := gofeed.NewParser().ParseURL(path)
+	utils.ExitIfErr(err)
 
-	if err != nil {
-		fmt.Println("Error retriving feed with " + path + ".")
+	result := Feed{
+		Title:       feed.Title,
+		Language:    feed.Language,
+		Description: feed.Description,
+		BuildDate:   *feed.UpdatedParsed,
 	}
-
-	result := Feed{}
-
-	result.Title = feed.Title
-	result.Language = feed.Language
-	result.Description = feed.Description
-	result.BuildDate = *feed.UpdatedParsed
 	result.Sections = append(result.Sections, Section{"Main", nil})
 
 	for key, item := range feed.Items {
-
-		article := Article{}
-		article.ID = key
-		article.Title = item.Title
-		article.Description = item.Description
-
-		article.Content = getContent(*item)
-
+		article := Article{
+			ID:          key,
+			Title:       item.Title,
+			Description: item.Description,
+			Content:     getContent(*item),
+		}
 		if item.Author != nil {
 			article.Author = item.Author.Name
 		}
-
 		result.Sections[0].Articles = append(result.Sections[0].Articles, article)
 	}
+
 	return result
 }
