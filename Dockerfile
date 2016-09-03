@@ -20,4 +20,5 @@ RUN go get github.com/nfnt/resize
 RUN go get github.com/scorredoira/email
 
 RUN go build -o main .
+EXPOSE 587
 CMD ["/go/src/rss-to-kindle/main"]
