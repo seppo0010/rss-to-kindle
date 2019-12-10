@@ -6,6 +6,7 @@ import "fmt"
 func GenerateOpf(feed Feed, manifest string, spine string) string {
 	creator := feed.Title
 	publisher := feed.Title
+	if feed.Language == "" { feed.Language = "en" }
 	return fmt.Sprintf(OpfTmpl,
 		feed.ID,
 		feed.Title,

@@ -1,7 +1,7 @@
 package content
 
 import (
-	"rss-to-kindle/utils"
+	"github.com/seppo0010/rss-to-kindle/utils"
 	"time"
 
 	"github.com/mmcdole/gofeed"
@@ -68,5 +68,9 @@ func GetFeed(path string) Feed {
 		result.Sections[0].Articles = append(result.Sections[0].Articles, article)
 	}
 
+	length := len(result.Sections[0].Articles)
+	for i := 0; i < length / 2; i++ {
+		result.Sections[0].Articles[i], result.Sections[0].Articles[length-i-1] =  result.Sections[0].Articles[length-i-1], result.Sections[0].Articles[i]
+	}
 	return result
 }

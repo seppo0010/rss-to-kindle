@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os/exec"
 	"path/filepath"
-	"rss-to-kindle/utils"
+	"github.com/seppo0010/rss-to-kindle/utils"
 )
 
 //GenerateMobi ...

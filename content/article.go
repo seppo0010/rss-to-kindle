@@ -3,7 +3,7 @@ package content
 import (
 	"fmt"
 	"regexp"
-	"rss-to-kindle/utils"
+	"github.com/seppo0010/rss-to-kindle/utils"
 	"strings"
 )
 

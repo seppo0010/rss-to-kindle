@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"rss-to-kindle/utils"
+	"github.com/seppo0010/rss-to-kindle/utils"
 	"strings"
 
 	"github.com/nfnt/resize"

@@ -3,7 +3,7 @@ package kindle
 import (
 	"net/mail"
 	"net/smtp"
-	"rss-to-kindle/utils"
+	"github.com/seppo0010/rss-to-kindle/utils"
 
 	"github.com/scorredoira/email"
 )

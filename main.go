@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"rss-to-kindle/content"
-	"rss-to-kindle/kindle"
+	"github.com/seppo0010/rss-to-kindle/content"
+	"github.com/seppo0010/rss-to-kindle/kindle"
 	"strings"
 
 	"github.com/fatih/color"
@@ -74,17 +74,9 @@ func main() {
 
 		printStatus("Generating .mobi file...")
 		mobiPath := kindle.GenerateMobi(dir)
+		printStatus("path: " + mobiPath)
 
-		printStatus("Sending files to your kindle email...")
-		kindle.Send(
-			conf.server,
-			conf.port,
-			conf.fromEmail,
-			conf.password,
-			conf.toEmail,
-			mobiPath,
-		)
-
+		os.Rename(mobiPath, "./target.mobi")
 		printStatus("Cleaning up...")
 		kindle.Cleanup(dir)
 
